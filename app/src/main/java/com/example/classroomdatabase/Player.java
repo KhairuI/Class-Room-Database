@@ -5,8 +5,10 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "player_table")
-public class Player {
+public class Player implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;

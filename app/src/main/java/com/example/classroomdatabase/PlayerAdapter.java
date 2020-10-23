@@ -3,6 +3,7 @@ package com.example.classroomdatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import java.util.List;
 
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHolder>{
     private List<Player> playerList;
+
+    private OnItemClick onItemClick;
 
 
     public void getPlayerList(List<Player> playerList){
@@ -43,11 +46,47 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         private TextView singleName, singleCode;
+        private CheckBox checkBox;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             singleName= itemView.findViewById(R.id.singleNameId);
             singleCode= itemView.findViewById(R.id.singleCodeId);
+            checkBox= itemView.findViewById(R.id.singleCheckId);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position= getAdapterPosition();
+                    if(onItemClick != null &&  position != RecyclerView.NO_POSITION){
+                        onItemClick.onItemClick(position);
+                    }
+
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position= getAdapterPosition();
+                    if(onItemClick != null &&  position != RecyclerView.NO_POSITION){
+                        onItemClick.onLongItemClick(v);
+                    }
+                    return false;
+                }
+            });
         }
     }
+
+    public interface OnItemClick{
+        void onItemClick(int position);
+        void onLongItemClick(View view);
+    }
+
+    public void setOnItemListener(OnItemClick onItemClick){
+        this.onItemClick= onItemClick;
+    }
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.classroomdatabase;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +9,8 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -52,6 +55,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         loadData();
+        adapter.setOnItemListener(new PlayerAdapter.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+
+                Player player= playerList.get(position);
+                Intent intent= new Intent(MainActivity.this,DetailsActivity.class);
+                intent.putExtra("details",player);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onLongItemClick(View view) {
+
+
+            }
+        });
     }
 
     private void loadData() {
@@ -59,6 +79,29 @@ public class MainActivity extends AppCompatActivity {
         playerList= playerDB.playerDAO().readData();
         adapter.getPlayerList(playerList);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.normal_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId()==R.id.deleteAllId){
+            playerDB.playerDAO().deleteAll();
+            playerList.clear();
+            adapter.notifyDataSetChanged();
+        }
+        else if(item.getItemId()==R.id.allTypeId){
+
+        }
+
+
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpDB() {

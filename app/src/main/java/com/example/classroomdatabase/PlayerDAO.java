@@ -15,6 +15,12 @@ public interface PlayerDAO {
     @Query("SELECT * FROM  player_table")
     public List<Player> readData();
 
+    @Query("UPDATE player_table SET name= :name , code= :code, type= :type WHERE id= :id")
+    public int updateData(String name, String code,String type, int id);
+
+    @Query("DELETE FROM player_table")
+    public void deleteAll();
+
 
 
 
