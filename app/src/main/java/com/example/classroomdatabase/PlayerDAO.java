@@ -21,6 +21,12 @@ public interface PlayerDAO {
     @Query("DELETE FROM player_table")
     public void deleteAll();
 
+    @Query("DELETE FROM player_table WHERE id= :id")
+    public int deleteData(int id);
+
+    @Query("SELECT * FROM player_table WHERE type= :type")
+    public List<Player> typeRead(String type);
+
 
 
 

@@ -15,7 +15,11 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
     private List<Player> playerList;
 
     private OnItemClick onItemClick;
+    private MainActivity mainActivity;
 
+    public PlayerAdapter(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     public void getPlayerList(List<Player> playerList){
         this.playerList= playerList;
@@ -28,13 +32,23 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
 
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.single_item,parent,false);
 
-        return new MyViewHolder(view);
+        return new MyViewHolder(view,mainActivity);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.singleCode.setText("Code: "+playerList.get(position).getCode());
         holder.singleName.setText("Name: "+playerList.get(position).getName());
+
+        if(!mainActivity.isEnable){
+            holder.checkBox.setVisibility(View.GONE);
+        }
+        else {
+            holder.checkBox.setVisibility(View.VISIBLE);
+            holder.checkBox.setChecked(false);
+        }
+
+
 
     }
 
@@ -48,11 +62,18 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.MyViewHold
         private TextView singleName, singleCode;
         private CheckBox checkBox;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, final MainActivity mainActivity) {
             super(itemView);
             singleName= itemView.findViewById(R.id.singleNameId);
             singleCode= itemView.findViewById(R.id.singleCodeId);
             checkBox= itemView.findViewById(R.id.singleCheckId);
+
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mainActivity.selectItem(v,getAdapterPosition());
+                }
+            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
